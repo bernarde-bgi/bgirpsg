@@ -21,6 +21,7 @@ public class Game : MonoBehaviour {
 	//REFERENCES UI
 	[SerializeField] private bool useComputer;
 	[SerializeField] private Text resultLabel;
+	[SerializeField] private Text opp_resultLabel;
 	[SerializeField] private Text scoreLabel;
 	[SerializeField] private Text timerLabel;
 
@@ -32,6 +33,7 @@ public class Game : MonoBehaviour {
 	private Janken player_j;
 	private Janken opponent_j;
 	private J_RESULT result;
+	private J_RESULT opp_result;
 	private int score = 0;
 
 
@@ -40,6 +42,7 @@ public class Game : MonoBehaviour {
 	private bool initJanken = false;
 	private bool initHand = false;
 	private int countDown = 0;
+	private float resultDuration = 0;
 
 
 
@@ -106,17 +109,21 @@ public class Game : MonoBehaviour {
 			opponent_j = GetRandomOpponent ();
 
 		result = GetResult (player_j, opponent_j);
-		resultLabel.text = result.ToString ();
 
-		if (result == J_RESULT.WIN)
-			score++;
-		scoreLabel.text = score.ToString ();
+		switch (result) {
+			case J_RESULT.WIN:
+				score++;
+				opp_result = J_RESULT.LOSE;
+				break;
+			case J_RESULT.LOSE:
+				opp_result = J_RESULT.WIN;
+				break;
+			case J_RESULT.DRAW:
+				opp_result = J_RESULT.DRAW;
+				break;
+		}
 
-
-		//RESET GAME
-		initJanken = false;
-		ToggleStart ();
-
+		ShowResult ();
 	}
 
 	private Janken GetRandomOpponent(){
@@ -137,6 +144,34 @@ public class Game : MonoBehaviour {
 			return J_RESULT.LOSE;
 			
 		return J_RESULT.WIN;
+	}
+
+
+	private void ShowResult(){
+		resultDuration = 2;
+		StartCoroutine (AnimateResult ());
+	}
+
+	IEnumerator AnimateResult(){
+		while (resultDuration >= 0) {
+			RandomizeResults();
+			yield return new WaitForSeconds(0.1f);
+			resultDuration -= 0.1f;
+		}
+
+
+		
+		resultLabel.text = result.ToString ();
+		opp_resultLabel.text = opp_result.ToString ();
+		scoreLabel.text = score.ToString ();
+		//RESET GAME
+		initJanken = false;
+		ToggleStart ();
+	}
+
+	private void RandomizeResults(){
+		resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
+		opp_resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
 	}
 
 }
