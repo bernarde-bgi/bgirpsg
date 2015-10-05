@@ -27,7 +27,11 @@ public class Game : MonoBehaviour {
 
 	[SerializeField] private Button Start_BTN;
 
+	[SerializeField] private Image playerResultImage;
+	[SerializeField] private Image opponentResultImage;
 
+
+	public Sprite[] resultSprites;
 
 	//RESULTS
 	private Janken player_j;
@@ -153,6 +157,8 @@ public class Game : MonoBehaviour {
 	}
 
 	IEnumerator AnimateResult(){
+		
+		playerResultImage.sprite = resultSprites [(int)player_j];
 		while (resultDuration >= 0) {
 			RandomizeResults();
 			yield return new WaitForSeconds(0.1f);
@@ -161,17 +167,24 @@ public class Game : MonoBehaviour {
 
 
 		
-		resultLabel.text = result.ToString ();
-		opp_resultLabel.text = opp_result.ToString ();
+		//resultLabel.text = result.ToString ();
+		//opp_resultLabel.text = opp_result.ToString ();
+		
+		//	playerResultImage.sprite = resultSprites [(int)player_j];
+		opponentResultImage.sprite = resultSprites [(int)opponent_j];
+
 		scoreLabel.text = score.ToString ();
+
 		//RESET GAME
 		initJanken = false;
 		ToggleStart ();
 	}
 
 	private void RandomizeResults(){
-		resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
-		opp_resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
+		//playerResultImage.sprite = resultSprites [Random.Range (0, 3)];
+		opponentResultImage.sprite = resultSprites [Random.Range (0, 3)];
+		//resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
+	//	opp_resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
 	}
 
 }
