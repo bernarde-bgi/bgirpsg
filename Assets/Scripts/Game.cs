@@ -31,8 +31,6 @@ public class Game : MonoBehaviour {
 	[SerializeField] private Image playerResultImage;
 	[SerializeField] private Image opponentResultImage;
 
-
-
 	public Sprite[] resultSprites;
 
 	//RESULTS

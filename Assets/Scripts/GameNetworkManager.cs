@@ -6,7 +6,8 @@ public class GameNetworkManager : MonoBehaviour {
 	[SerializeField] private GameObject createButton;
 	[SerializeField] private GameObject joinButton;
 	[SerializeField] private Transform  prefab;
-
+	[SerializeField] private networkController networkcontrol;
+	[SerializeField] private stateController stateControl;
 
 	int port = 25000;
 	public int maxClients = 1;
@@ -33,15 +34,20 @@ public class GameNetworkManager : MonoBehaviour {
 		if (!serverInitalized) {
 			//Network.InitializeServer (maxClients, port, false);
 			Network.InitializeServer(maxClients,port,!Network.HavePublicAddress()); 
+			networkcontrol.ListenForClients("janken");
 			//MasterServer.dedicatedServer = true;
 			//MasterServer.RegisterHost("BGI", "Janken", "Peer to Peer");
 		}
 	}
 	public void JoinGame(){
-		if (!serverInitalized)
-			MasterServer.PollHostList ();
+		if (!serverInitalized) {
+			//networkcontrol.StopBroadcastListener();
+			networkcontrol.ListenServer();
+			networkcontrol.FindServer();
 
-		Game.instance.ResetGame ();
+			if(stateControl.LocalServer != null && stateControl.LocalServer.Count > 0)
+				Network.Connect (stateControl.LocalServer[0].address, port);
+		}
 
 	}
 
@@ -49,6 +55,7 @@ public class GameNetworkManager : MonoBehaviour {
 		if (serverInitalized)
 			Network.Disconnect ();
 
+		Game.instance.ResetGame();
 		StopAllCoroutines ();
 	}
 
@@ -148,4 +155,6 @@ public class GameNetworkManager : MonoBehaviour {
 	}
 
 	#endregion
+
+
 }
