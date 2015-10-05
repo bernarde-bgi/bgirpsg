@@ -19,7 +19,7 @@ public class Game : MonoBehaviour {
 
 
 	//REFERENCES UI
-	[SerializeField] private bool useComputer;
+	[SerializeField] public bool useComputer;
 	[SerializeField] private Text resultLabel;
 	[SerializeField] private Text opp_resultLabel;
 	[SerializeField] private Text scoreLabel;
@@ -30,6 +30,7 @@ public class Game : MonoBehaviour {
 
 	[SerializeField] private Image playerResultImage;
 	[SerializeField] private Image opponentResultImage;
+
 
 
 	public Sprite[] resultSprites;
@@ -47,21 +48,60 @@ public class Game : MonoBehaviour {
 	//GAME LOGIC
 	private bool initJanken = false;
 	private bool initHand = false;
-	private bool hasnotDrawn = false;
+	private bool hasPlayerDrawn = false;
+	private bool hasOppDrawn = false;
 	private int countDown = 0;
 	private float resultDuration = 0;
 
 
 
 
+	
+	private static Game _instance = default(Game);
+	
+	public static Game instance {
+		get {
+			if (!_instance) {
+				GameObject gamecore = GameObject.Find("GamePanel");
+				_instance = gamecore.GetComponent<Game>();
+			}
+			return _instance;
+		}
+	}
+	
+	void Awake ()
+	{
+		if(_instance != null && _instance != this) {
+			GameObject.Destroy(this.gameObject);
+			return;
+		}	
+		_instance = this;
+		DontDestroyOnLoad(this);
+	}
+
+
 	// Use this for initialization
 	void Start () {
+		ResetGame ();
+	//	StartCoroutine(StartGame (0.5f));
+
+	}
+
+	public void ResetGame(){
 		player_j = Janken.ROCK;
 		opponent_j = Janken.ROCK;
 		score = 0;
-		StartCoroutine(StartGame (0.5f));
-
+		countDown = 3;
+		initJanken = false;
+		initHand = false;
+		hasPlayerDrawn = false;
+		hasOppDrawn = false;
 	}
+
+	public void InitializeGame(){
+		StartCoroutine(StartGame (0.5f));
+	}
+
 
 	public IEnumerator StartGame(float delay){
 		//if (initJanken)
@@ -73,9 +113,13 @@ public class Game : MonoBehaviour {
 		countDown = 3;
 		timerLabel.text = countDown.ToString();
 		initHand = false;
-		hasnotDrawn = false;
+		hasPlayerDrawn = false;
+		hasOppDrawn = false;
 		StartCoroutine (StartJanken ());
-		StartCoroutine (StartAnimateHands ());
+		playerResultImage.sprite = resultSprites [0];
+		opponentResultImage.sprite = resultSprites [0];
+	//	StartCoroutine (StartAnimateHands ());
+	//	StartCoroutine (StartAnimateOppHands ());
 	}
 
 	IEnumerator StartJanken(){
@@ -107,9 +151,17 @@ public class Game : MonoBehaviour {
 		if (initHand == false)
 			return;
 		player_j = (Janken)value;
-		hasnotDrawn = true;
+		hasPlayerDrawn = true;
 		DisableHands ();
-		RollJanken();
+		if (useComputer)
+			RollJanken ();
+		else {
+			if(hasPlayerDrawn && hasOppDrawn)
+				RollJankenInfo();
+		}
+		
+		playerResultImage.sprite = resultSprites [(int)player_j];
+
 	}
 
 
@@ -117,25 +169,30 @@ public class Game : MonoBehaviour {
 	private void RollJanken(){
 			
 		//** RANDOM OPPONENT VALUE
-		if (useComputer)
+		if (useComputer) {
+		
 			opponent_j = GetRandomOpponent ();
-
-		result = GetResult (player_j, opponent_j);
-
-		switch (result) {
-			case J_RESULT.WIN:
-				score++;
-				opp_result = J_RESULT.LOSE;
-				break;
-			case J_RESULT.LOSE:
-				opp_score++;
-				opp_result = J_RESULT.WIN;
-				break;
-			case J_RESULT.DRAW:
-				opp_result = J_RESULT.DRAW;
-				break;
+			RollJankenInfo();
 		}
+	}
 
+	private void RollJankenInfo(){
+		result = GetResult (player_j, opponent_j);
+		
+		switch (result) {
+		case J_RESULT.WIN:
+			score++;
+			opp_result = J_RESULT.LOSE;
+			break;
+		case J_RESULT.LOSE:
+			opp_score++;
+			opp_result = J_RESULT.WIN;
+			break;
+		case J_RESULT.DRAW:
+			opp_result = J_RESULT.DRAW;
+			break;
+		}
+		
 		ShowResult ();
 	}
 
@@ -166,14 +223,14 @@ public class Game : MonoBehaviour {
 	}
 
 	IEnumerator AnimateResult(){
-		
-		playerResultImage.sprite = resultSprites [(int)player_j];
-		while (resultDuration >= 0) {
+
+		/*while (resultDuration >= 0) {
 			RandomizeOppResults();
 			yield return new WaitForSeconds(0.1f);
 			resultDuration -= 0.1f;
-		}
+		}*/
 
+		yield return new WaitForSeconds(2f);
 
 		
 		//resultLabel.text = result.ToString ();
@@ -202,12 +259,28 @@ public class Game : MonoBehaviour {
 	}
 
 	private IEnumerator StartAnimateHands(){
-		while (!hasnotDrawn) {
-			RandomizeOppResults();
+		while (!hasPlayerDrawn) {
 			RandomizePlayerResult();
 			yield return new WaitForSeconds(0.15f);
 		}
+	}
+
+	private IEnumerator StartAnimateOppHands(){
+		while (!hasOppDrawn) {
+			RandomizeOppResults();
+			yield return new WaitForSeconds(0.15f);
+		}
+	}
+
+	public void OpponentDrawn(int value){
+		opponent_j = (Janken)value;
+		hasOppDrawn = true;
+		if(hasPlayerDrawn && hasOppDrawn)
+			RollJankenInfo();
 
 	}
+
+
+
 
 }
