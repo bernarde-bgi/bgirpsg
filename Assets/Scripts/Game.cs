@@ -23,6 +23,7 @@ public class Game : MonoBehaviour {
 	[SerializeField] private Text resultLabel;
 	[SerializeField] private Text opp_resultLabel;
 	[SerializeField] private Text scoreLabel;
+	[SerializeField] private Text opp_scoreLabel;
 	[SerializeField] private Text timerLabel;
 
 	[SerializeField] private Button Start_BTN;
@@ -39,12 +40,14 @@ public class Game : MonoBehaviour {
 	private J_RESULT result;
 	private J_RESULT opp_result;
 	private int score = 0;
+	private int opp_score = 0;
 
 
 
 	//GAME LOGIC
 	private bool initJanken = false;
 	private bool initHand = false;
+	private bool hasnotDrawn = false;
 	private int countDown = 0;
 	private float resultDuration = 0;
 
@@ -56,19 +59,23 @@ public class Game : MonoBehaviour {
 		player_j = Janken.ROCK;
 		opponent_j = Janken.ROCK;
 		score = 0;
-
+		StartCoroutine(StartGame (0.5f));
 
 	}
 
-	public void StartGame(){
-		if (initJanken)
-			return;
-		ToggleStart ();
+	public IEnumerator StartGame(float delay){
+		//if (initJanken)
+		//	yield return;
+	
+		yield return new WaitForSeconds (delay);
+		//ToggleStart ();
 		initJanken = true;
 		countDown = 3;
 		timerLabel.text = countDown.ToString();
 		initHand = false;
+		hasnotDrawn = false;
 		StartCoroutine (StartJanken ());
+		StartCoroutine (StartAnimateHands ());
 	}
 
 	IEnumerator StartJanken(){
@@ -100,6 +107,7 @@ public class Game : MonoBehaviour {
 		if (initHand == false)
 			return;
 		player_j = (Janken)value;
+		hasnotDrawn = true;
 		DisableHands ();
 		RollJanken();
 	}
@@ -120,6 +128,7 @@ public class Game : MonoBehaviour {
 				opp_result = J_RESULT.LOSE;
 				break;
 			case J_RESULT.LOSE:
+				opp_score++;
 				opp_result = J_RESULT.WIN;
 				break;
 			case J_RESULT.DRAW:
@@ -160,7 +169,7 @@ public class Game : MonoBehaviour {
 		
 		playerResultImage.sprite = resultSprites [(int)player_j];
 		while (resultDuration >= 0) {
-			RandomizeResults();
+			RandomizeOppResults();
 			yield return new WaitForSeconds(0.1f);
 			resultDuration -= 0.1f;
 		}
@@ -174,17 +183,31 @@ public class Game : MonoBehaviour {
 		opponentResultImage.sprite = resultSprites [(int)opponent_j];
 
 		scoreLabel.text = score.ToString ();
+		opp_scoreLabel.text = opp_score.ToString ();
 
 		//RESET GAME
 		initJanken = false;
-		ToggleStart ();
+		StartCoroutine(StartGame (2));
+		//ToggleStart ();
 	}
 
-	private void RandomizeResults(){
+	private void RandomizeOppResults(){
 		//playerResultImage.sprite = resultSprites [Random.Range (0, 3)];
 		opponentResultImage.sprite = resultSprites [Random.Range (0, 3)];
 		//resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
 	//	opp_resultLabel.text = ((J_RESULT)Random.Range (0, 3)).ToString();
+	}
+	private void RandomizePlayerResult(){
+		playerResultImage.sprite = resultSprites [Random.Range (0, 3)];
+	}
+
+	private IEnumerator StartAnimateHands(){
+		while (!hasnotDrawn) {
+			RandomizeOppResults();
+			RandomizePlayerResult();
+			yield return new WaitForSeconds(0.15f);
+		}
+
 	}
 
 }
