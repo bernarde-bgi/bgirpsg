@@ -233,7 +233,8 @@ public class networkController : MonoBehaviour
 		IPEndPoint ep1 = (IPEndPoint)((UdpState)(ar.AsyncState)).e;
 		byte[] receiveBytes = uc1.EndReceive(ar, ref ep1);
 		receiveData = Encoding.ASCII.GetString(receiveBytes);
-		
+
+
 		statecontrol.AddLocalServer(receiveData,ep1.Address.ToString());
 		
 		Debug.Log("Server responded to find server message over broadcast listener");
