@@ -31,6 +31,10 @@ public class Game : MonoBehaviour {
 	[SerializeField] private Image playerResultImage;
 	[SerializeField] private Image opponentResultImage;
 
+	[SerializeField] private int MAX_SCORE = 5;
+	public bool hasAWinner = false;
+	public bool hasGameStarted = false;
+
 	public Sprite[] resultSprites;
 
 	//RESULTS
@@ -86,9 +90,15 @@ public class Game : MonoBehaviour {
 	}
 
 	public void ResetGame(){
+		hasGameStarted = false;
+		hasAWinner = false;
 		player_j = Janken.ROCK;
 		opponent_j = Janken.ROCK;
 		score = 0;
+		opp_score = 0;
+		
+		scoreLabel.text = score.ToString ();
+		opp_scoreLabel.text = opp_score.ToString ();
 		countDown = 3;
 		initJanken = false;
 		initHand = false;
@@ -97,6 +107,7 @@ public class Game : MonoBehaviour {
 	}
 
 	public void InitializeGame(){
+		hasGameStarted = true;
 		StartCoroutine(StartGame (0.5f));
 	}
 
@@ -242,8 +253,20 @@ public class Game : MonoBehaviour {
 
 		//RESET GAME
 		initJanken = false;
-		StartCoroutine(StartGame (2));
+		if (score >= 5 || opp_score >= 5) {
+			AwardWinner();
+		} else {
+			StartCoroutine (StartGame (2));
+		}
 		//ToggleStart ();
+	}
+
+	private void AwardWinner(){
+		hasAWinner = true;
+	}
+
+	public void AnimateResultAtEnd(){
+		//insert animation here
 	}
 
 	private void RandomizeOppResults(){

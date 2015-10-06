@@ -364,7 +364,7 @@ public class networkController : MonoBehaviour
         Debug.Log("Server initialized and ready");
     }
 	
-	void OnPlayerConnected(NetworkPlayer p) 
+/*	void OnPlayerConnected(NetworkPlayer p) 
 	{
 		if(Network.isServer)
 		{
@@ -374,7 +374,7 @@ public class networkController : MonoBehaviour
 			Debug.Log("Player " + newViewID.ToString() + " connected from " + p.ipAddress + ":" + p.port);
 			Debug.Log("There are now " + playerCount + " players.");
 		}
-    }
+    }*/
 	public void FakeServerJoin(Vector3 pos)
 	{
 		// simulate a server join for single player mode
@@ -382,10 +382,10 @@ public class networkController : MonoBehaviour
 		StartServer();
 		NetworkViewID newPlayerView = Network.AllocateViewID();
 		NetworkPlayer netPlayer = new NetworkPlayer();
-		JoinPlayer(newPlayerView, pos, netPlayer);
+		//JoinPlayer(newPlayerView, pos, netPlayer);
 
 	}
-
+	/*
 	[RPC]
 	public void JoinPlayer(NetworkViewID newPlayerView, Vector3 pos, NetworkPlayer netPlayer)
 	{
@@ -449,13 +449,13 @@ public class networkController : MonoBehaviour
 		
 	}
 	
-	
+	*/
 	public void ConnectToServer(string s)
 	{
     	Network.Connect(s, 25000);
 		
 	}
-	
+	/*
 	void OnConnectedToServer()
 	{
 		
@@ -520,7 +520,7 @@ public class networkController : MonoBehaviour
 		ServerUpdatePlayer(netPlayer, pos);
 		
 	}
-	
+	*/
 	[RPC]
 	void ServerUpdatePlayer(NetworkPlayer netPlayer, Vector3 pos)
 	{
@@ -537,7 +537,7 @@ public class networkController : MonoBehaviour
 		
 	}
 	
-	
+	/*
 	void OnPlayerDisconnected(NetworkPlayer player) 
 	{
 		if(Network.isServer){
@@ -594,6 +594,6 @@ public class networkController : MonoBehaviour
 		}
 		
 		
-    }
+    }*/
 	
 }

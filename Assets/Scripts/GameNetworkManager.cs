@@ -51,13 +51,26 @@ public class GameNetworkManager : MonoBehaviour {
 
 	}
 
-	public void EndGame(){
+	public void EndGame(bool showWinner = false){
 		if (serverInitalized)
 			Network.Disconnect ();
 
 		Game.instance.ResetGame();
-		StopAllCoroutines ();
+		if (!showWinner)
+			StopAllCoroutines ();
+		else {
+			StopAllCoroutines ();
+			Game.instance.AnimateResultAtEnd();
+		}
 	}
+
+	void Update(){
+		if (Game.instance.hasAWinner && Game.instance.hasGameStarted) {
+			EndGame(true);
+		}
+	}
+
+
 
 	void OnGUI(){
 		if (Network.peerType == NetworkPeerType.Disconnected) {
@@ -71,10 +84,10 @@ public class GameNetworkManager : MonoBehaviour {
 				GUILayout.Label ("Network server is starting up...");
 			else { 
 				GUILayout.Label ("Network server is running.");          
-				showServerInformation ();    
-				showClientInformation ();
+				//showServerInformation ();    
+				//showClientInformation ();
 			}
-			if (GUILayout.Button ("Stop Server")) {               
+			if (GUILayout.Button ("QUIT")) {               
 				EndGame ();   
 			}
 		}
@@ -101,6 +114,7 @@ public class GameNetworkManager : MonoBehaviour {
 	void OnDisconnectedFromServer(NetworkDisconnection info){
 		Debug.Log("OnDisconnectedFromServer");
 		EnableButtons ();
+		EndGame ();
 	}
 	void OnConnectedToServer(){
 		Debug.Log("OnConnectedToServer");
