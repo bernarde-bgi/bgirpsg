@@ -144,7 +144,10 @@ public class GamePhotonNetworkManager : Photon.PunBehaviour {
 		if (lobbyCreated) {
 			//Network.Disconnect ();
 			PhotonNetwork.Disconnect();	
+
 		}
+		lobbyCreated = false;
+		onRoomCreated = false;
 		Game.instance.ResetGame();
 		if (!showWinner)
 			StopAllCoroutines ();
@@ -152,6 +155,7 @@ public class GamePhotonNetworkManager : Photon.PunBehaviour {
 			StopAllCoroutines ();
 			Game.instance.AnimateResultAtEnd();
 		}
+		EnableButtons ();
 	}
 	
 	void Update(){
