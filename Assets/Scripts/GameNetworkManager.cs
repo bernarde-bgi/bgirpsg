@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GameNetworkManager : MonoBehaviour {
@@ -153,9 +153,9 @@ public class GameNetworkManager : MonoBehaviour {
 			 GetComponent<NetworkView>().RPC ("ShowRPCHand", RPCMode.OthersBuffered, value);
 	} 
 
-	[RPC]
+	[PunRPC]
 	public void ShowRPCHand(int value){
-			Debug.Log ("[RPC] " + value.ToString ());
+			Debug.Log ("[PunRPC] " + value.ToString ());
 			Game.instance.OpponentDrawn (value);
 
 	}

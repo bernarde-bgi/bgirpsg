@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class ClientMain : MonoBehaviour {
 
 	
-	[RPC]
+	[PunRPC]
 	public void ShowRPCHand(int value){
-		Debug.Log ("[RPC] "+ value.ToString());
+		Debug.Log ("[PunRPC] "+ value.ToString());
 		Game.instance.OpponentDrawn (value);
 	}
 

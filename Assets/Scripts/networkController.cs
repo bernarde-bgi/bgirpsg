@@ -386,7 +386,7 @@ public class networkController : MonoBehaviour
 
 	}
 	/*
-	[RPC]
+	[PunRPC]
 	public void JoinPlayer(NetworkViewID newPlayerView, Vector3 pos, NetworkPlayer netPlayer)
 	{
 		
@@ -462,7 +462,7 @@ public class networkController : MonoBehaviour
 		GetComponent<NetworkView>().RPC("SendAllPlayers", RPCMode.Server);
 	}
 	
-	[RPC]
+	[PunRPC]
 	void SendAllPlayers(NetworkMessageInfo info)
 	{
 		if(Network.isServer)
@@ -504,7 +504,7 @@ public class networkController : MonoBehaviour
     }
 
 		
-	[RPC]
+	[PunRPC]
 	void ClientUpdatePlayer(Vector3 pos, NetworkMessageInfo info)
 	{
 		// a client is sending us a position update
@@ -521,7 +521,7 @@ public class networkController : MonoBehaviour
 		
 	}
 	*/
-	[RPC]
+	[PunRPC]
 	void ServerUpdatePlayer(NetworkPlayer netPlayer, Vector3 pos)
 	{
 		// the server is telling us to update a player
@@ -551,7 +551,7 @@ public class networkController : MonoBehaviour
 		}
     }
 	
-	[RPC]
+	[PunRPC]
 	void DisconnectPlayer(NetworkPlayer netPlayer)
 	{
 		if(Network.isClient) 
