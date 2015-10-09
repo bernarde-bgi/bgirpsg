@@ -45,7 +45,7 @@ public class GamePhotonNetworkManager : Photon.PunBehaviour {
 	}
 
 	private void InitializePhoton(){
-
+		Debug.Log("hekllow");
 		PhotonNetwork.ConnectUsingSettings("v4.2");
 	}
 

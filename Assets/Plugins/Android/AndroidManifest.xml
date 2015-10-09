@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.unity3d.player" android:installLocation="preferExternal" android:theme="@android:style/Theme.NoTitleBar" android:versionCode="1" android:versionName="1.0">
+  <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true" />
+  <application android:icon="@drawable/app_icon" android:label="@string/app_name" android:debuggable="true">
+    <activity android:name="co.cashplay.android.unityadapter.CpUnityPlayerNativeActivity" android:label="@string/app_name" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
+      <intent-filter>
+        <action generator="CashPlay" android:name="android.intent.action.MAIN" />
+        <category generator="CashPlay" android:name="android.intent.category.LAUNCHER" />
+        <category generator="CashPlay" android:name="android.intent.category.LEANBACK_LAUNCHER" />
+      </intent-filter>
+      <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+      <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="false" />
+      <intent-filter generator="CashPlay">
+        <action generator="CashPlay" android:name="android.intent.action.VIEW" />
+        <category generator="CashPlay" android:name="android.intent.category.DEFAULT" />
+        <category generator="CashPlay" android:name="android.intent.category.BROWSABLE" />
+        <data generator="CashPlay" android:scheme="cashplay-bb75e9c04e110133138b723c91847147" android:host="home" />
+      </intent-filter>
+    </activity>
+    <meta-data generator="CashPlay" android:name="co.cashplay.GAME_ID" android:value="bb75e9c04e110133138b723c91847147" />
+    <meta-data generator="CashPlay" android:name="co.cashplay.SECRET" android:value="" />
+    <meta-data generator="CashPlay" android:name="co.cashplay.STORE_ID" android:value="" />
+    <meta-data generator="CashPlay" android:name="co.cashplay.ADJUST_ID" android:value="bb75e9c04e110133138b723c91847147" />
+    <meta-data generator="CashPlay" android:name="co.cashplay.TEST_MODE" android:value="true" />
+    <meta-data generator="CashPlay" android:name="co.cashplay.LOG_ENABLED" android:value="true" />
+    <meta-data generator="CashPlay" android:name="co.cashplay.NO_CASH" android:value="false" />
+    <meta-data generator="CashPlay" android:name="co.cashplay.ALTERNATIVE_RESULTS_DELIVERY" android:value="false" />
+    <activity generator="CashPlay" android:name="co.cashplay.android.client.WebUi" android:label="Cashplay" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" />
+    <receiver generator="CashPlay" android:name="co.cashplay.android.client.NotificationReceiver" />
+    <receiver generator="CashPlay" android:name="com.adjust.sdk.AdjustReferrerReceiver" android:exported="true">
+      <intent-filter generator="CashPlay">
+        <action generator="CashPlay" android:name="com.android.vending.INSTALL_REFERRER" />
+      </intent-filter>
+    </receiver>
+    <service generator="CashPlay" android:name="co.cashplay.android.client.GcmRegistrationService" />
+    <receiver generator="CashPlay" android:name="co.cashplay.android.client.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+      <intent-filter generator="CashPlay">
+        <action generator="CashPlay" android:name="com.google.android.c2dm.intent.REGISTRATION" />
+        <action generator="CashPlay" android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <category generator="CashPlay" android:name="com.bgi.janken14" />
+      </intent-filter>
+    </receiver>
+  </application>
+  <permission generator="CashPlay" android:name="com.bgi.janken14.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+  <uses-permission generator="CashPlay" android:name="android.permission.CAMERA" android:required="false" />
+  <uses-permission generator="CashPlay" android:name="android.permission.ACCESS_FINE_LOCATION" android:required="false" />
+  <uses-permission generator="CashPlay" android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission generator="CashPlay" android:name="android.permission.INTERNET" />
+  <uses-permission generator="CashPlay" android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission generator="CashPlay" android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission generator="CashPlay" android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission generator="CashPlay" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission generator="CashPlay" android:name="android.permission.READ_LOGS" />
+  <uses-permission generator="CashPlay" android:name="com.google.android.c2dm.permission.RECEIVE" />
+  <uses-permission generator="CashPlay" android:name="com.bgi.janken14.permission.C2D_MESSAGE" />
+  <uses-feature generator="CashPlay" android:name="android.hardware.location" android:required="false" />
+  <uses-feature generator="CashPlay" android:name="android.hardware.location.gps" android:required="false" />
+  <uses-feature generator="CashPlay" android:name="android.hardware.location.network" android:required="false" />
+  <uses-feature generator="CashPlay" android:name="android.hardware.camera" android:required="false" />
+  <uses-feature generator="CashPlay" android:name="android.hardware.camera.front" android:required="false" />
+</manifest>
